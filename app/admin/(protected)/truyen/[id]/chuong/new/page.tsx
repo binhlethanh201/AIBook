@@ -4,12 +4,7 @@ import ChapterForm from "./ChapterForm";
 
 export const instant = false;
 
-
-export default async function NewChapterPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function NewChapterPage({ params }: { params: Promise<{ id: string }> }) {
   const storyId = Number((await params).id);
   if (!Number.isInteger(storyId) || storyId <= 0) notFound();
 

@@ -1,20 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
+
+const emptySubscribe = () => () => {};
 
 export default function ShareBar({ title }: { title: string }) {
-  const [url, setUrl] = useState("");
+  const url = useSyncExternalStore(
+    emptySubscribe,
+    () => window.location.href,
+    () => ""
+  );
   const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    setUrl(window.location.href);
-  }, []);
 
   const u = encodeURIComponent(url);
   const t = encodeURIComponent(title);
 
   const links = [
-    { label: "Facebook", color: "bg-blue-600", href: `https://www.facebook.com/sharer/sharer.php?u=${u}` },
+    {
+      label: "Facebook",
+      color: "bg-blue-600",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${u}`,
+    },
     { label: "X", color: "bg-black", href: `https://twitter.com/intent/tweet?url=${u}&text=${t}` },
     { label: "WhatsApp", color: "bg-green-600", href: `https://wa.me/?text=${t}%20${u}` },
     { label: "Telegram", color: "bg-sky-500", href: `https://t.me/share/url?url=${u}&text=${t}` },

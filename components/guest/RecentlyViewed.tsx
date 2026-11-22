@@ -26,7 +26,6 @@ function writeStored(list: Stored[]) {
   }
 }
 
-// Ghi lại chương vừa đọc. Chỉ lưu slug và số chương, không lưu tiêu đề hay ảnh
 export function RecordRead({ slug, number }: Stored) {
   useEffect(() => {
     const list = readStored();
@@ -37,19 +36,22 @@ export function RecordRead({ slug, number }: Stored) {
   return null;
 }
 
-// Hiển thị danh sách, đã được server kiểm tra và làm mới
 export default function RecentlyViewed() {
   const [items, setItems] = useState<Item[]>([]);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     const stored = readStored();
-    if (stored.length === 0) {
-      setLoaded(true);
-      return;
-    }
-
     let cancelled = false;
+
+    if (stored.length === 0) {
+      Promise.resolve().then(() => {
+        if (!cancelled) setLoaded(true);
+      });
+      return () => {
+        cancelled = true;
+      };
+    }
 
     fetch("/api/recent", {
       method: "POST",
@@ -59,7 +61,6 @@ export default function RecentlyViewed() {
       .then((res) => (res.ok ? res.json() : null))
       .then((valid: Item[] | null) => {
         if (cancelled || !valid) return;
-        // Cập nhật lại localStorage, bỏ các truyện đã bị xóa
         writeStored(valid.map(({ slug, number }) => ({ slug, number })));
         setItems(valid);
       })
@@ -84,10 +85,7 @@ export default function RecentlyViewed() {
         <ul className="space-y-3">
           {items.map((i) => (
             <li key={i.slug}>
-              <Link
-                href={`/story/${i.slug}/chapter/${i.number}`}
-                className="block hover:underline"
-              >
+              <Link href={`/story/${i.slug}/chapter/${i.number}`} className="block hover:underline">
                 <span className="line-clamp-2 text-sm font-medium">{i.title}</span>
                 <span className="text-xs text-neutral-500">Đọc tới chương {i.number}</span>
               </Link>

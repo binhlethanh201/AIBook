@@ -1,62 +1,54 @@
 import { Suspense } from "react";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
+import { adminListStories } from "@/lib/admin";
+import StoryFilterBar from "./StoryFilterBar";
+import StoryListClient, { type AdminStoryRow } from "./StoryListClient";
 
 export const instant = false;
 
-async function StoryList() {
-  const stories = await prisma.story.findMany({
-    orderBy: { createdAt: "desc" },
-  });
+type State = "all" | "public" | "hidden";
+
+function parseState(raw?: string): State {
+  return raw === "public" || raw === "hidden" ? raw : "all";
+}
+
+async function StoryList({ q, state }: { q: string; state: State }) {
+  const stories = await adminListStories({ q, state });
 
   if (stories.length === 0) {
+    const filtered = q.trim() !== "" || state !== "all";
     return (
       <div className="rounded-lg border border-dashed border-[#DCD5CC] bg-[#FDFBF9] px-6 py-12 text-center">
         <p className="font-mono text-xs tracking-wider text-[#78736D] uppercase">
-          Chưa có truyện nào.
+          {filtered ? "Không có truyện khớp bộ lọc." : "Chưa có truyện nào."}
         </p>
       </div>
     );
   }
 
-  return (
-    <ul className="divide-y divide-[#E5DFD7] overflow-hidden rounded-lg border border-[#DCD5CC] bg-[#FDFBF9]">
-      {stories.map((s, index) => (
-        <li
-          key={s.id}
-          className="group flex items-center justify-between gap-4 px-5 py-4 transition-colors duration-150 hover:bg-white"
-        >
-          <div className="flex min-w-0 items-center gap-3.5">
-            <span className="shrink-0 font-mono text-xs font-medium text-[#78736D]">
-              {String(index + 1).padStart(2, "0")}
-            </span>
-            <span className="truncate text-[15px] font-medium text-[#1A1A1A]">
-              {s.title}
-            </span>
-            {!s.published && (
-              <span className="shrink-0 rounded border border-[#DCD5CC] bg-[#F9F5F1] px-2 py-0.5 font-mono text-[10px] tracking-wider text-[#78736D] uppercase">
-                Ẩn
-              </span>
-            )}
-          </div>
+  const rows: AdminStoryRow[] = stories.map((s) => ({
+    id: s.id,
+    title: s.title,
+    published: s.published,
+    viewCount: s.viewCount,
+    chapters: s._count.chapters,
+  }));
 
-          <Link
-            href={`/admin/truyen/${s.id}`}
-            className="shrink-0 font-mono text-xs tracking-wider text-[#5C5752] uppercase transition-colors hover:text-[#1A1A1A]"
-          >
-            
-            Sửa
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
+  // key đặt lại lựa chọn khi bộ lọc thay đổi
+  return <StoryListClient key={`${q}-${state}`} stories={rows} />;
 }
 
-export default function AdminPage() {
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; state?: string }>;
+}) {
+  const sp = await searchParams;
+  const q = sp.q ?? "";
+  const state = parseState(sp.state);
+
   return (
     <main className="mx-auto w-full max-w-5xl px-6 py-10 text-[#1A1A1A] lg:px-10">
-      {/* Page Header */}
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4 border-b border-[#E5DFD7] pb-6">
         <div>
           <p className="mb-2 font-mono text-[11px] tracking-[0.12em] text-[#78736D] uppercase">
@@ -75,7 +67,10 @@ export default function AdminPage() {
         </Link>
       </div>
 
-      {/* Story List with Suspense */}
+      <Suspense fallback={null}>
+        <StoryFilterBar />
+      </Suspense>
+
       <Suspense
         fallback={
           <div className="rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-5 py-8 text-center">
@@ -85,7 +80,7 @@ export default function AdminPage() {
           </div>
         }
       >
-        <StoryList />
+        <StoryList q={q} state={state} />
       </Suspense>
     </main>
   );

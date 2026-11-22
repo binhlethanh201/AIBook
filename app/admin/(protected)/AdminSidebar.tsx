@@ -111,11 +111,7 @@ export default function AdminSidebar() {
                       </span>
                       <span>{item.label}</span>
                     </div>
-                    {active && (
-                      <span className="font-mono text-[11px] text-[#F9F5F1]">
-                        →
-                      </span>
-                    )}
+                    {active && <span className="font-mono text-[11px] text-[#F9F5F1]">→</span>}
                   </Link>
                 );
               })}

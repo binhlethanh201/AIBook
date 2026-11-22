@@ -44,10 +44,17 @@ function SectionTitle({ children }: { children: React.ReactNode }) {
 
 function FeaturedCard({ story, className }: { story: CardStory; className: string }) {
   return (
-    <Link href={`/story/${story.slug}`} className={`group relative block overflow-hidden rounded-2xl ${className}`}>
+    <Link
+      href={`/story/${story.slug}`}
+      className={`group relative block overflow-hidden rounded-2xl ${className}`}
+    >
       {story.coverUrl ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={story.coverUrl} alt={story.title} className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-105" />
+        <img
+          src={story.coverUrl}
+          alt={story.title}
+          className="absolute inset-0 h-full w-full object-cover transition group-hover:scale-105"
+        />
       ) : (
         <div className="absolute inset-0 bg-neutral-300" />
       )}
@@ -73,7 +80,11 @@ function NewsCard({ story }: { story: CardStory }) {
       <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-neutral-200">
         {story.coverUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={story.coverUrl} alt={story.title} className="h-full w-full object-cover transition group-hover:scale-105" />
+          <img
+            src={story.coverUrl}
+            alt={story.title}
+            className="h-full w-full object-cover transition group-hover:scale-105"
+          />
         )}
         <span className="absolute right-3 top-3 rounded bg-red-600 px-2.5 py-1 text-xs font-bold uppercase text-white">
           Truyện
@@ -165,10 +176,16 @@ export default async function HomePage({
                 {popular.map((s, i) => (
                   <li key={s.id}>
                     <Link href={`/story/${s.slug}`} className="group flex items-center gap-3">
-                      <span className="w-4 text-center text-lg font-bold text-neutral-400">{i}</span>
+                      <span className="w-4 text-center text-lg font-bold text-neutral-400">
+                        {i}
+                      </span>
                       {s.coverUrl ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={s.coverUrl} alt={s.title} className="h-20 w-16 flex-shrink-0 rounded object-cover" />
+                        <img
+                          src={s.coverUrl}
+                          alt={s.title}
+                          className="h-20 w-16 flex-shrink-0 rounded object-cover"
+                        />
                       ) : (
                         <div className="h-20 w-16 flex-shrink-0 rounded bg-neutral-200" />
                       )}

@@ -15,7 +15,11 @@ export default async function RelatedStories({ excludeId }: { excludeId: number 
           <Link key={s.id} href={`/truyen/${s.slug}`} className="group block">
             {s.coverUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={s.coverUrl} alt={s.title} className="aspect-video w-full rounded-lg object-cover" />
+              <img
+                src={s.coverUrl}
+                alt={s.title}
+                className="aspect-video w-full rounded-lg object-cover"
+              />
             ) : (
               <div className="aspect-video w-full rounded-lg bg-neutral-200" />
             )}

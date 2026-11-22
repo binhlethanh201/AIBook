@@ -41,7 +41,5 @@ export async function POST(req: Request) {
   );
 
   // Giữ nguyên thứ tự, bỏ các mục đã bị xóa hoặc ẩn
-  return Response.json(
-    results.filter((r): r is NonNullable<typeof r> => r !== null)
-  );
+  return Response.json(results.filter((r): r is NonNullable<typeof r> => r !== null));
 }

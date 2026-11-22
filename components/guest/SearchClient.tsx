@@ -36,14 +36,13 @@ function keyOf(q: string, status: string, sort: Sort) {
 }
 
 export default function SearchClient({
-  statuses,
   initialQ,
   initialStatus,
   initialSort,
   initialResults,
 }: Props) {
   const [input, setInput] = useState(initialQ);
-  const [status, setStatus] = useState(initialStatus);
+  const [status] = useState(initialStatus);
   const [sort, setSort] = useState<Sort>(initialSort);
   const [results, setResults] = useState<SearchResult[]>(initialResults);
   const [loading, setLoading] = useState(false);
@@ -51,6 +50,14 @@ export default function SearchClient({
   // Dùng trimmed làm dependency để khoảng trắng cuối không kích hoạt tìm lại
   const trimmed = input.trim();
   const lastKey = useRef(keyOf(initialQ, initialStatus, initialSort));
+
+  function handleInputChange(nextValue: string) {
+    setInput(nextValue);
+    if (!nextValue.trim()) {
+      setResults([]);
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     // Đồng bộ URL để tải lại hoặc chia sẻ vẫn giữ kết quả
@@ -65,11 +72,7 @@ export default function SearchClient({
     if (key === lastKey.current) return;
     lastKey.current = key;
 
-    if (!trimmed) {
-      setResults([]);
-      setLoading(false);
-      return;
-    }
+    if (!trimmed) return;
 
     const controller = new AbortController();
     const timer = setTimeout(async () => {
@@ -114,7 +117,7 @@ export default function SearchClient({
             autoFocus
             type="search"
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => handleInputChange(e.target.value)}
             placeholder="Nhập tên truyện hoặc tác giả..."
             className="w-full rounded-xl border border-neutral-200 bg-white py-3.5 pl-11 pr-4 text-base text-neutral-900 placeholder:text-neutral-400 outline-none transition focus:border-red-600 focus:ring-2 focus:ring-red-600/15"
           />
@@ -123,20 +126,6 @@ export default function SearchClient({
         {/* Bộ lọc */}
         <div className="mt-3.5 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap items-center gap-2.5">
-            {/* <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-              aria-label="Tình trạng truyện"
-              className="rounded-lg border border-neutral-200 bg-white px-3.5 py-2 text-sm font-medium text-neutral-700 outline-none transition hover:border-neutral-300 focus:border-red-600"
-            >
-              <option value="">Tất cả tình trạng</option>
-              {statuses.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select> */}
-
             <div
               className="inline-flex rounded-lg border border-neutral-200 bg-white p-0.5 text-sm"
               role="group"
@@ -166,7 +155,8 @@ export default function SearchClient({
             {hasQuery && !loading && (
               <>
                 Tìm thấy <span className="font-semibold text-neutral-900">{results.length}</span>{" "}
-                truyện cho <span className="font-semibold text-red-600">&ldquo;{trimmed}&rdquo;</span>
+                truyện cho{" "}
+                <span className="font-semibold text-red-600">&ldquo;{trimmed}&rdquo;</span>
               </>
             )}
           </p>
@@ -197,7 +187,6 @@ export default function SearchClient({
                 href={`/story/${s.slug}`}
                 className="group flex h-full gap-4 rounded-xl border border-neutral-200/90 bg-white p-3.5 transition duration-200 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-md"
               >
-                {/* Ảnh bìa + Badge đỏ góc trên phải giống phong cách ảnh */}
                 <div className="relative h-32 w-24 flex-shrink-0 overflow-hidden rounded-lg bg-neutral-100">
                   {s.coverUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
@@ -216,7 +205,6 @@ export default function SearchClient({
                   </span>
                 </div>
 
-                {/* Nội dung thẻ */}
                 <div className="flex min-w-0 flex-1 flex-col justify-between py-0.5">
                   <div>
                     <h2 className="line-clamp-2 text-sm font-bold leading-snug text-neutral-900 transition-colors group-hover:text-red-600 sm:text-[15px]">
@@ -238,7 +226,6 @@ export default function SearchClient({
                     </div>
                   </div>
 
-                  {/* Dòng thông tin chương & ngày đăng tương tự meta dưới thẻ trong ảnh */}
                   <p className="mt-2.5 truncate text-xs font-medium text-neutral-500">
                     Chương {s._count.chapters} • {formatDate(new Date(s.createdAt))}
                   </p>

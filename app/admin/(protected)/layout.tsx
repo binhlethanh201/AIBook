@@ -5,11 +5,7 @@ import AdminSidebar from "./AdminSidebar";
 
 export const instant = false;
 
-export default async function ProtectedAdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function ProtectedAdminLayout({ children }: { children: React.ReactNode }) {
   const user = await getCurrentUser();
   if (!user) redirect("/admin/login");
 
@@ -29,9 +25,7 @@ export default async function ProtectedAdminLayout({
           {/* Thông tin Admin & Nút đăng xuất */}
           <div className="flex items-center gap-4">
             <div className="hidden items-center gap-2 sm:flex">
-              <span className="truncate font-mono text-xs text-[#5C5752]">
-                {user.email}
-              </span>
+              <span className="truncate font-mono text-xs text-[#5C5752]">{user.email}</span>
               <span className="rounded border border-[#DCD5CC] bg-[#FDFBF9] px-2 py-0.5 font-mono text-[10px] tracking-wider text-[#1A1A1A] uppercase">
                 {user.role}
               </span>

@@ -73,10 +73,7 @@ export default function ChapterEditForm({ storyId, storyTitle, chapter }: Props)
 
   return (
     <div className="min-h-screen w-full bg-[#F9F5F1] px-6 py-10 text-[#1A1A1A] selection:bg-[#1A1A1A] selection:text-[#F9F5F1]">
-      <form
-        onSubmit={handleSave}
-        className="mx-auto flex w-full max-w-3xl flex-col gap-6"
-      >
+      <form onSubmit={handleSave} className="mx-auto flex w-full max-w-3xl flex-col gap-6">
         {/* Header & Breadcrumb */}
         <div className="border-b border-[#E5DFD7] pb-6">
           <div className="mb-3 flex items-center justify-between">
@@ -158,9 +155,7 @@ export default function ChapterEditForm({ storyId, storyTitle, chapter }: Props)
               onChange={(e) => setPublished(e.target.checked)}
               className="h-4 w-4 cursor-pointer accent-[#1A1A1A]"
             />
-            <span className="text-sm font-medium text-[#1A1A1A]">
-              Hiển thị công khai
-            </span>
+            <span className="text-sm font-medium text-[#1A1A1A]">Hiển thị công khai</span>
           </div>
           <span className="font-mono text-[11px] tracking-wider text-[#78736D] uppercase">
             {published ? "PUBLIC" : "DRAFT"}

@@ -1,11 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next/types";
-import {
-  getPublishedChapter,
-  getPublishedChapterList,
-  getAdjacentChapters,
-} from "@/lib/public";
+import { getPublishedChapter, getPublishedChapterList, getAdjacentChapters } from "@/lib/public";
 import ReaderView from "@/components/guest/ReaderView";
 import ReaderNav from "@/components/guest/ReaderNav";
 import ShareBar from "@/components/guest/ShareBar";

@@ -103,9 +103,7 @@ export default function StoryEditForm({ story }: { story: Story }) {
 
       {/* Mô tả */}
       <label className="flex flex-col gap-2">
-        <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
-          Mô tả
-        </span>
+        <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">Mô tả</span>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -138,9 +136,7 @@ export default function StoryEditForm({ story }: { story: Story }) {
             onChange={(e) => setPublished(e.target.checked)}
             className="h-4 w-4 cursor-pointer accent-[#1A1A1A]"
           />
-          <span className="text-sm font-medium text-[#1A1A1A]">
-            Hiển thị công khai
-          </span>
+          <span className="text-sm font-medium text-[#1A1A1A]">Hiển thị công khai</span>
         </div>
         <span className="font-mono text-[11px] tracking-wider text-[#78736D] uppercase">
           {published ? "PUBLIC" : "DRAFT"}

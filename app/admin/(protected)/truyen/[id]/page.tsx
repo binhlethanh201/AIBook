@@ -5,11 +5,7 @@ import ChapterList from "./ChapterList";
 
 export const instant = false;
 
-export default async function EditStoryPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function EditStoryPage({ params }: { params: Promise<{ id: string }> }) {
   const id = Number((await params).id);
   if (!Number.isInteger(id) || id <= 0) notFound();
 
@@ -29,19 +25,14 @@ export default async function EditStoryPage({
 
           <div className="aspect-[2/3] w-full max-w-[240px] overflow-hidden rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] md:max-w-none">
             {story.coverUrl ? (
-              <img
-                src={story.coverUrl}
-                alt={story.title}
-                className="h-full w-full object-cover"
-              />
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={story.coverUrl} alt={story.title} className="h-full w-full object-cover" />
             ) : (
               <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 px-4 text-center">
                 <span className="font-mono text-xs tracking-wider text-[#A39D95] uppercase">
                   No Cover
                 </span>
-                <span className="text-xs text-[#B0A99F]">
-                  Chưa có ảnh bìa
-                </span>
+                <span className="text-xs text-[#B0A99F]">Chưa có ảnh bìa</span>
               </div>
             )}
           </div>

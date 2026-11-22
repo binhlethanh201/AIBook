@@ -30,10 +30,7 @@ export async function POST(req: Request) {
   } catch (err) {
     // P2002: slug đã tồn tại (trùng tiêu đề)
     if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
-      return Response.json(
-        { error: "Đã có truyện trùng tên, hãy đổi tiêu đề" },
-        { status: 409 }
-      );
+      return Response.json({ error: "Đã có truyện trùng tên, hãy đổi tiêu đề" }, { status: 409 });
     }
     throw err;
   }

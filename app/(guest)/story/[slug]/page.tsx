@@ -1,16 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { getPublishedStory, getPublishedChapterList, getRelatedStories } from "@/lib/public";
+import { getPublishedStory, getRelatedStories } from "@/lib/public";
 import { formatDate } from "@/lib/format";
 
 export const instant = false;
 
-export default async function StoryPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function StoryPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const story = await getPublishedStory(slug);
   if (!story) notFound();
@@ -81,9 +77,7 @@ export default async function StoryPage({
 
               <dl className="mt-5 grid max-w-lg grid-cols-[120px_1fr] gap-x-3 gap-y-2.5 rounded-xl border border-neutral-200/80 bg-white p-4 text-sm">
                 <dt className="font-medium text-neutral-400">Tác giả</dt>
-                <dd className="font-medium text-neutral-800">
-                  {story.author ?? "Đang cập nhật"}
-                </dd>
+                <dd className="font-medium text-neutral-800">{story.author ?? "Đang cập nhật"}</dd>
 
                 <dt className="font-medium text-neutral-400">Tổng số chương</dt>
                 <dd className="font-semibold text-neutral-900">{chapters.length}</dd>

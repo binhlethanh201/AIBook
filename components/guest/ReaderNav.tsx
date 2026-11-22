@@ -22,7 +22,10 @@ export default function ReaderNav({ prev, next, storyHref }: Props) {
 
       <div className="flex w-full items-center justify-between text-sm">
         {prev ? (
-          <Link href={`${storyHref}/chapter/${prev}`} className="rounded border px-3 py-2 hover:bg-neutral-100">
+          <Link
+            href={`${storyHref}/chapter/${prev}`}
+            className="rounded border px-3 py-2 hover:bg-neutral-100"
+          >
             ← Chương {prev}
           </Link>
         ) : (

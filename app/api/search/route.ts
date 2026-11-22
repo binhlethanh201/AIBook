@@ -12,7 +12,5 @@ export async function GET(req: Request) {
   const rows = await searchStories({ q, status, sort });
 
   // Date không gửi qua JSON được ở dạng gốc, nên chuyển sang chuỗi ISO
-  return Response.json(
-    rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() }))
-  );
+  return Response.json(rows.map((r) => ({ ...r, createdAt: r.createdAt.toISOString() })));
 }

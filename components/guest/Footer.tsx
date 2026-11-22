@@ -9,9 +9,15 @@ export default function Footer() {
         </Link>
 
         <nav className="mt-5 flex flex-wrap justify-center gap-6 text-sm font-semibold text-neutral-700">
-          <Link href="/contact" className="hover:underline">Liên hệ</Link>
-          <Link href="/terms" className="hover:underline">Điều khoản sử dụng</Link>
-          <Link href="/privacy" className="hover:underline">Chính sách bảo mật</Link>
+          <Link href="/contact" className="hover:underline">
+            Liên hệ
+          </Link>
+          <Link href="/terms" className="hover:underline">
+            Điều khoản sử dụng
+          </Link>
+          <Link href="/privacy" className="hover:underline">
+            Chính sách bảo mật
+          </Link>
         </nav>
 
         <p className="mx-auto mt-6 max-w-2xl text-xs text-neutral-500">
