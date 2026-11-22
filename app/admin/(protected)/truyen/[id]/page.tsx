@@ -17,11 +17,46 @@ export default async function EditStoryPage({
   if (!story) notFound();
 
   return (
-    <>
-      <StoryEditForm story={story} />
-      <section className="mx-auto max-w-xl px-8 pb-12">
+    <main className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-6 py-10 text-[#1A1A1A]">
+      {/* Row 1: Ảnh bìa (trái) + Form cập nhật truyện (phải) */}
+      <div className="grid grid-cols-1 items-start gap-8 md:grid-cols-[240px_1fr] lg:grid-cols-[260px_1fr] lg:gap-10">
+        {/* Cột trái: Khung ảnh bìa */}
+        <aside className="flex flex-col gap-2.5 md:sticky md:top-20">
+          <div className="flex items-center justify-between font-mono text-[11px] tracking-wider text-[#78736D] uppercase">
+            <span>[ Cover ]</span>
+            <span>2:3</span>
+          </div>
+
+          <div className="aspect-[2/3] w-full max-w-[240px] overflow-hidden rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] md:max-w-none">
+            {story.coverUrl ? (
+              <img
+                src={story.coverUrl}
+                alt={story.title}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="flex h-full w-full flex-col items-center justify-center gap-1.5 px-4 text-center">
+                <span className="font-mono text-xs tracking-wider text-[#A39D95] uppercase">
+                  No Cover
+                </span>
+                <span className="text-xs text-[#B0A99F]">
+                  Chưa có ảnh bìa
+                </span>
+              </div>
+            )}
+          </div>
+        </aside>
+
+        {/* Cột phải: Form chỉnh sửa */}
+        <div className="min-w-0">
+          <StoryEditForm story={story} />
+        </div>
+      </div>
+
+      {/* Row 2: Danh sách chương */}
+      <div className="pt-2">
         <ChapterList storyId={story.id} />
-      </section>
-    </>
+      </div>
+    </main>
   );
 }

@@ -32,6 +32,7 @@ model Story {
   status      String   @default("Ongoing")
   genres      String[] @default([])
   viewCount   Int      @default(0)
+  searchText  String   @default("")
   published   Boolean   @default(false)
   createdAt   DateTime  @default(now())
   chapters    Chapter[]

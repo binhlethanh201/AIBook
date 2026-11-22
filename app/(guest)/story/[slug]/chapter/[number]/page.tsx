@@ -12,6 +12,7 @@ import ShareBar from "@/components/guest/ShareBar";
 import Sidebar from "@/components/guest/Sidebar";
 import RelatedStories from "@/components/guest/RelatedStories";
 import { RecordRead } from "@/components/guest/RecentlyViewed";
+import ViewCounter from "@/components/guest/ViewCounter";
 import AdSlot from "../../../../../../components/AdSlot";
 
 export const instant = false;
@@ -57,6 +58,7 @@ export default async function ReaderPage({ params }: { params: Params }) {
     <>
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[1fr_340px]">
         <article className="min-w-0">
+          <ViewCounter slug={slug} />
           <RecordRead slug={slug} number={n} />
 
           <span className="inline-block border-l-4 border-red-600 pl-3 text-sm font-semibold uppercase tracking-wider text-red-600">

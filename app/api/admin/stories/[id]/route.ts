@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { checkPermission } from "@/lib/rbac";
+import { normalizeSearch } from "@/lib/normalize";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -32,6 +33,7 @@ export async function PUT(req: Request, { params }: Params) {
         description: String(body.description ?? "").trim() || null,
         coverUrl: String(body.coverUrl ?? "").trim() || null,
         published: Boolean(body.published),
+        searchText: normalizeSearch(title),
       },
     });
     return Response.json(story);

@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { slugify } from "@/lib/slug";
+import { normalizeSearch } from "@/lib/normalize";
 
 export async function POST(req: Request) {
   const body = await req.json();
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
         description,
         coverUrl,
         published,
+        searchText: normalizeSearch(title),
       },
     });
     return Response.json(story, { status: 201 });

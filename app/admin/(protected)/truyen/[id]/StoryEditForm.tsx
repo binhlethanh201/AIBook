@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { Story } from "@prisma/client";
 
@@ -59,70 +58,125 @@ export default function StoryEditForm({ story }: { story: Story }) {
   }
 
   return (
-    <form onSubmit={handleSave} className="mx-auto flex max-w-xl flex-col gap-4 p-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Sửa truyện</h1>
-        <span className="text-sm text-gray-500">Slug: /truyen/{story.slug}</span>
+    <form onSubmit={handleSave} className="flex w-full flex-col gap-6 text-[#1A1A1A]">
+      {/* Header & Breadcrumb đồng bộ với StoryForm */}
+      <div className="border-b border-[#E5DFD7] pb-6">
+        <div className="mb-3 flex items-center justify-between">
+          <button
+            type="button"
+            onClick={() => router.push("/admin")}
+            className="cursor-pointer font-mono text-[11px] tracking-wider text-[#78736D] uppercase transition-colors hover:text-[#1A1A1A]"
+          >
+            ← Danh sách truyện
+          </button>
+          <span className="font-mono text-[11px] tracking-[0.12em] text-[#78736D] uppercase">
+            [ Edit Story ]
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
+          <h1 className="text-[28px] leading-tight font-medium tracking-[-0.03em] text-[#1A1A1A]">
+            Sửa truyện
+          </h1>
+          <span className="rounded border border-[#DCD5CC] bg-[#FDFBF9] px-2.5 py-1 font-mono text-[11px] text-[#5C5752]">
+            /truyen/{story.slug}
+          </span>
+        </div>
+        <p className="mt-1.5 text-sm text-[#5C5752]">
+          Cập nhật thông tin và trạng thái hiển thị của đầu truyện.
+        </p>
       </div>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Tiêu đề *</span>
+      {/* Tiêu đề */}
+      <label className="flex flex-col gap-2">
+        <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
+          Tiêu đề *
+        </span>
         <input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="rounded border p-2"
+          placeholder="Nhập tên truyện..."
+          className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-3.5 py-3 text-sm text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
           required
         />
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Mô tả</span>
+      {/* Mô tả */}
+      <label className="flex flex-col gap-2">
+        <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
+          Mô tả
+        </span>
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           rows={4}
-          className="rounded border p-2"
+          placeholder="Tóm tắt ngắn gọn nội dung truyện..."
+          className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] p-3.5 text-sm leading-relaxed text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
         />
       </label>
 
-      <label className="flex flex-col gap-1">
-        <span className="text-sm font-medium">Link ảnh bìa</span>
+      {/* Link ảnh bìa */}
+      <label className="flex flex-col gap-2">
+        <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
+          Link ảnh bìa
+        </span>
         <input
           type="url"
           value={coverUrl}
           onChange={(e) => setCoverUrl(e.target.value)}
           placeholder="https://..."
-          className="rounded border p-2"
+          className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-3.5 py-3 font-mono text-sm text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
         />
       </label>
 
-      <label className="flex items-center gap-2">
-        <input
-          type="checkbox"
-          checked={published}
-          onChange={(e) => setPublished(e.target.checked)}
-        />
-        <span className="text-sm">Hiển thị công khai (guest có thể thấy)</span>
+      {/* Trạng thái công khai */}
+      <label className="flex cursor-pointer items-center justify-between rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-4 py-3.5 transition-colors hover:border-[#A39D95]">
+        <div className="flex items-center gap-3">
+          <input
+            type="checkbox"
+            checked={published}
+            onChange={(e) => setPublished(e.target.checked)}
+            className="h-4 w-4 cursor-pointer accent-[#1A1A1A]"
+          />
+          <span className="text-sm font-medium text-[#1A1A1A]">
+            Hiển thị công khai
+          </span>
+        </div>
+        <span className="font-mono text-[11px] tracking-wider text-[#78736D] uppercase">
+          {published ? "PUBLIC" : "DRAFT"}
+        </span>
       </label>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {/* Error Alert */}
+      {error && (
+        <div className="rounded-lg border border-[#D94E4E]/30 bg-[#F4E6E4] px-3.5 py-2.5 text-xs font-medium text-[#B83232]">
+          {error}
+        </div>
+      )}
 
-      <div className="flex flex-wrap gap-3">
+      {/* Action Bar */}
+      <div className="flex flex-wrap items-center gap-3 border-t border-[#E5DFD7] pt-5">
         <button
           type="submit"
           disabled={saving || deleting}
-          className="rounded bg-black px-4 py-2 text-white disabled:opacity-50"
+          className="cursor-pointer rounded-lg bg-[#1A1A1A] px-5 py-3 text-sm font-medium tracking-wide text-[#F9F5F1] transition-all duration-150 hover:bg-[#333333] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {saving ? "Đang lưu..." : "Lưu thay đổi"}
         </button>
-        <Link href="/admin" className="rounded border px-4 py-2">
-          Quay lại
-        </Link>
+
+        <button
+          type="button"
+          onClick={() => router.push("/admin")}
+          className="cursor-pointer rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-4 py-3 text-sm font-medium text-[#5C5752] transition-colors hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+        >
+          Hủy
+        </button>
+
         <button
           type="button"
           onClick={handleDelete}
           disabled={saving || deleting}
-          className="ml-auto rounded bg-red-600 px-4 py-2 text-white disabled:opacity-50"
+          className="ml-auto cursor-pointer rounded-lg border border-[#D94E4E]/40 bg-transparent px-4 py-3 text-sm font-medium text-[#B83232] transition-colors hover:bg-[#F4E6E4] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {deleting ? "Đang xóa..." : "Xóa truyện"}
         </button>

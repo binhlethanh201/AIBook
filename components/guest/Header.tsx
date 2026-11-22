@@ -18,6 +18,9 @@ export default function Header() {
               <Link href="/" className="block rounded px-3 py-2 hover:bg-neutral-100">
                 Trang chủ
               </Link>
+              <Link href="/search" className="block rounded px-3 py-2 hover:bg-neutral-100">
+                Tìm kiếm
+              </Link>
             </nav>
           </details>
 
@@ -26,7 +29,8 @@ export default function Header() {
           </Link>
         </div>
 
-        <button
+        <Link
+          href="/search"
           aria-label="Tìm kiếm"
           className="flex h-10 w-10 items-center justify-center rounded hover:bg-neutral-100"
         >
@@ -34,7 +38,7 @@ export default function Header() {
             <circle cx="11" cy="11" r="7" />
             <path d="M21 21l-4.3-4.3" />
           </svg>
-        </button>
+        </Link>
       </div>
     </header>
   );
