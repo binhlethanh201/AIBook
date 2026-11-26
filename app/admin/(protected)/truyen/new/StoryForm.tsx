@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 export default function StoryForm() {
@@ -11,6 +12,7 @@ export default function StoryForm() {
   const [published, setPublished] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<"manual" | "excel">("manual");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -37,7 +39,7 @@ export default function StoryForm() {
 
   return (
     <div className="min-h-screen w-full bg-[#F9F5F1] px-6 py-10 text-[#1A1A1A] selection:bg-[#1A1A1A] selection:text-[#F9F5F1]">
-      <form onSubmit={handleSubmit} className="mx-auto flex w-full max-w-2xl flex-col gap-6">
+      <div className="mx-auto flex w-full max-w-2xl flex-col gap-6">
         {/* Header & Breadcrumb */}
         <div className="border-b border-[#E5DFD7] pb-6">
           <div className="mb-3 flex items-center justify-between">
@@ -58,90 +60,132 @@ export default function StoryForm() {
           </h1>
         </div>
 
-        {/* Tiêu đề */}
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
-            Tiêu đề *
-          </span>
-          <input
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Nhập tên truyện..."
-            className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-3.5 py-3 text-sm text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
-            required
-          />
-        </label>
-
-        {/* Mô tả */}
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
-            Mô tả
-          </span>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={4}
-            placeholder="Tóm tắt ngắn gọn nội dung truyện..."
-            className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] p-3.5 text-sm leading-relaxed text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
-          />
-        </label>
-
-        {/* Link ảnh bìa */}
-        <label className="flex flex-col gap-2">
-          <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
-            Link ảnh bìa
-          </span>
-          <input
-            type="url"
-            value={coverUrl}
-            onChange={(e) => setCoverUrl(e.target.value)}
-            placeholder="https://..."
-            className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-3.5 py-3 font-mono text-sm text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
-          />
-        </label>
-
-        {/* Trạng thái công khai */}
-        <label className="flex cursor-pointer items-center justify-between rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-4 py-3.5 transition-colors hover:border-[#A39D95]">
-          <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              checked={published}
-              onChange={(e) => setPublished(e.target.checked)}
-              className="h-4 w-4 cursor-pointer accent-[#1A1A1A]"
-            />
-            <span className="text-sm font-medium text-[#1A1A1A]">Hiển thị công khai</span>
-          </div>
-          <span className="font-mono text-[11px] tracking-wider text-[#78736D] uppercase">
-            {published ? "PUBLIC" : "DRAFT"}
-          </span>
-        </label>
-
-        {/* Error Alert */}
-        {error && (
-          <div className="rounded-lg border border-[#D94E4E]/30 bg-[#F4E6E4] px-3.5 py-2.5 text-xs font-medium text-[#B83232]">
-            {error}
-          </div>
-        )}
-
-        {/* Action Bar */}
-        <div className="flex flex-wrap items-center gap-3 border-t border-[#E5DFD7] pt-5">
-          <button
-            type="submit"
-            disabled={loading}
-            className="cursor-pointer rounded-lg bg-[#1A1A1A] px-5 py-3 text-sm font-medium tracking-wide text-[#F9F5F1] transition-all duration-150 hover:bg-[#333333] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            {loading ? "Đang lưu..." : "Lưu truyện"}
-          </button>
-
-          <button
-            type="button"
-            onClick={() => router.push("/admin")}
-            className="cursor-pointer rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-4 py-3 text-sm font-medium text-[#5C5752] transition-colors hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
-          >
-            Hủy
-          </button>
+        {/* Chuyển chế độ */}
+        <div className="flex w-fit gap-2 rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] p-1">
+          {(["manual", "excel"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className={`cursor-pointer rounded-md px-3 py-1.5 font-mono text-[11px] tracking-wider uppercase transition-colors ${
+                mode === m ? "bg-[#1A1A1A] text-[#F9F5F1]" : "text-[#5C5752] hover:text-[#1A1A1A]"
+              }`}
+            >
+              {m === "manual" ? "Nhập thủ công" : "Nhập từ Excel"}
+            </button>
+          ))}
         </div>
-      </form>
+
+        {mode === "excel" ? (
+          <div className="rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] p-5">
+            <p className="mb-4 text-sm text-[#5C5752]">
+              Tải file mẫu, điền thông tin truyện và chương, rồi tải lên để kiểm tra và lưu. Trang
+              nhập Excel sẽ hiện xem trước và cho phép sửa trước khi lưu.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="/api/admin/import/template"
+                className="rounded-lg border border-[#DCD5CC] px-4 py-2.5 text-sm font-medium text-[#5C5752] transition-colors hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+              >
+                Tải file mẫu (.xlsx)
+              </a>
+              <Link
+                href="/admin/import"
+                prefetch={false}
+                className="rounded-lg bg-[#1A1A1A] px-4 py-2.5 text-sm font-medium text-[#F9F5F1] transition-colors hover:bg-[#333333]"
+              >
+                Mở trang nhập Excel
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+            {/* Tiêu đề */}
+            <label className="flex flex-col gap-2">
+              <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
+                Tiêu đề *
+              </span>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Nhập tên truyện..."
+                className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-3.5 py-3 text-sm text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
+                required
+              />
+            </label>
+
+            {/* Mô tả */}
+            <label className="flex flex-col gap-2">
+              <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
+                Mô tả
+              </span>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                rows={4}
+                placeholder="Tóm tắt ngắn gọn nội dung truyện..."
+                className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] p-3.5 text-sm leading-relaxed text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
+              />
+            </label>
+
+            {/* Link ảnh bìa */}
+            <label className="flex flex-col gap-2">
+              <span className="font-mono text-[11px] tracking-wider text-[#5C5752] uppercase">
+                Link ảnh bìa
+              </span>
+              <input
+                type="url"
+                value={coverUrl}
+                onChange={(e) => setCoverUrl(e.target.value)}
+                placeholder="https://..."
+                className="w-full rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-3.5 py-3 font-mono text-sm text-[#1A1A1A] placeholder:text-[#B0A99F] transition-colors duration-150 outline-none hover:border-[#A39D95] focus:border-[#1A1A1A] focus:bg-white"
+              />
+            </label>
+
+            {/* Trạng thái công khai */}
+            <label className="flex cursor-pointer items-center justify-between rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-4 py-3.5 transition-colors hover:border-[#A39D95]">
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  checked={published}
+                  onChange={(e) => setPublished(e.target.checked)}
+                  className="h-4 w-4 cursor-pointer accent-[#1A1A1A]"
+                />
+                <span className="text-sm font-medium text-[#1A1A1A]">Hiển thị công khai</span>
+              </div>
+              <span className="font-mono text-[11px] tracking-wider text-[#78736D] uppercase">
+                {published ? "PUBLIC" : "DRAFT"}
+              </span>
+            </label>
+
+            {/* Error Alert */}
+            {error && (
+              <div className="rounded-lg border border-[#D94E4E]/30 bg-[#F4E6E4] px-3.5 py-2.5 text-xs font-medium text-[#B83232]">
+                {error}
+              </div>
+            )}
+
+            {/* Action Bar */}
+            <div className="flex flex-wrap items-center gap-3 border-t border-[#E5DFD7] pt-5">
+              <button
+                type="submit"
+                disabled={loading}
+                className="cursor-pointer rounded-lg bg-[#1A1A1A] px-5 py-3 text-sm font-medium tracking-wide text-[#F9F5F1] transition-all duration-150 hover:bg-[#333333] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                {loading ? "Đang lưu..." : "Lưu truyện"}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => router.push("/admin")}
+                className="cursor-pointer rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-4 py-3 text-sm font-medium text-[#5C5752] transition-colors hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+              >
+                Hủy
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

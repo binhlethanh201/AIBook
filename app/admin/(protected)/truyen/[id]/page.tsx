@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import StoryEditForm from "./StoryEditForm";
@@ -44,8 +45,30 @@ export default async function EditStoryPage({ params }: { params: Promise<{ id: 
         </div>
       </div>
 
-      {/* Row 2: Danh sách chương */}
-      <div className="pt-2">
+      {/* Row 2: Nhập nhiều chương + Danh sách chương */}
+      <div className="flex flex-col gap-6 pt-2">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-[#DCD5CC] bg-[#FDFBF9] px-4 py-3">
+          <p className="text-sm text-[#5C5752]">
+            Thêm nhiều chương cùng lúc bằng cách dán văn bản hoặc file Excel.
+          </p>
+          <div className="flex gap-2">
+            <Link
+              href={`/admin/truyen/${story.id}/chuong/bulk`}
+              prefetch={false}
+              className="rounded-lg border border-[#DCD5CC] px-3.5 py-2 text-xs font-medium text-[#5C5752] transition-colors hover:border-[#1A1A1A] hover:text-[#1A1A1A]"
+            >
+              Dán nhiều chương
+            </Link>
+            <Link
+              href="/admin/import"
+              prefetch={false}
+              className="rounded-lg bg-[#1A1A1A] px-3.5 py-2 text-xs font-medium text-[#F9F5F1] transition-colors hover:bg-[#333333]"
+            >
+              Nhập Excel
+            </Link>
+          </div>
+        </div>
+
         <ChapterList storyId={story.id} />
       </div>
     </main>
